@@ -12,7 +12,7 @@ public:
 	Matrix(int num, int in_columns, int in_rows);
 
 //2-dimensional array with numbers into a class object.
-	Matrix(const int* array, int row, int col);
+	Matrix(const int* array, int in_columns, int in_rows);
 
 //copy constructor
 	Matrix(const Matrix& source);

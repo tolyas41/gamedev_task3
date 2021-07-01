@@ -8,7 +8,7 @@ int main() {
 //2. Contain a type conversion constructor that converts the 
 //directly specified numerical constant with a sign into a class object.
 
-	Matrix* num_const_obj = new Matrix(5, 3, 3);
+	Matrix* num_const_obj = new Matrix(5, 9, 3);
 	std::cout << "2. num object : \n\n";						
 	num_const_obj->print_array();
 
@@ -143,10 +143,10 @@ int main() {
 	{
 		std::cout << "\n\n*operator check (obj): \n";
 		Matrix mult_obj;
-		Matrix a_obj(2, 2, 3);
-		Matrix b_obj(3, 3, 4);
+		Matrix a_obj(2, 3, 3);
+		Matrix b_obj(3, 3, 3);
 		Matrix c_obj(4, 4, 5);
-		mult_obj = a_obj * b_obj * c_obj;
+		mult_obj = a_obj * b_obj;
 
 		std::cout << "\na_obj : \n";
 		a_obj.print_array();
@@ -371,6 +371,30 @@ int main() {
 		b_obj.print_array();
 
 	}
+
+//*operator with object
+{
+	std::cout << "\n\n*operator check (obj): \n";
+	Matrix mult_obj;
+	Matrix a_obj(2, 3, 2);
+	Matrix b_obj(3, 4, 3);
+	Matrix c_obj(4, 3, 3);
+	mult_obj = a_obj * b_obj;
+
+	std::cout << "\na_obj : \n";
+	a_obj.print_array();
+
+	std::cout << "\nb_obj : \n";
+	b_obj.print_array();
+
+	std::cout << "\nc_obj : \n";
+	c_obj.print_array();
+
+	std::cout << "\nmult_obj (a * b * c): \n";
+	mult_obj.print_array();
+
+}
+
 
 
 	return 0;

@@ -369,39 +369,28 @@ const Matrix Matrix::operator*(Matrix& right_obj) const {
 		Matrix obj_to_return(0, columns, rows);
 		for (int i = 0; i < columns; i++) {
 			for (int j = 0; j < rows; j++) {
-				obj_to_return.data[i][j] = data[i][j] * right_obj.data[i][j];
+				for (int m = 0; m < columns; m++) {
+					obj_to_return.data[i][j] += data[i][m] * right_obj.data[m][j];
+				}
+			}
+		}
+		return obj_to_return;
+	}
+	else if (columns == right_obj.rows) {
+		Matrix obj_to_return(0, right_obj.columns, rows);
+		for (int i = 0; i < columns; i++) {
+			for (int j = 0; j < rows; j++) {
+				for (int m = 0; m < columns; m++) {
+					obj_to_return.data[i][j] += data[i][m] * right_obj.data[m][j];
+				}
 			}
 		}
 		return obj_to_return;
 	}
 	else {
-		int overflow_columns;
-		int overflow_rows;
-		if (columns > right_obj.columns) {
-			overflow_columns = columns;
-		}
-		else {
-			overflow_columns = right_obj.columns;
-		}
-		if (rows > right_obj.rows) {
-			overflow_rows = rows;
-		}
-		else {
-			overflow_rows = right_obj.rows;
-		}
-
-		Matrix overflowobj(0, overflow_columns, overflow_rows);
-		for (int i = 0; i < columns; i++) {
-			for (int j = 0; j < rows; j++) {
-				overflowobj.data[i][j] += data[i][j];
-			}
-		}
-		for (int i = 0; i < right_obj.columns; i++) {
-			for (int j = 0; j < right_obj.rows; j++) {
-				overflowobj.data[i][j] *= right_obj.data[i][j];
-			}
-		}
-		return overflowobj;
+		std::cout << "\nmatrices are not consistent!\n";
+		Matrix nullobj(0, 0, 0);
+		return nullobj;
 	}
 }
 
