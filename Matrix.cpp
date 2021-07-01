@@ -241,7 +241,7 @@ std::string Matrix::to_string(const Matrix& source) {
 	return temp;
 }
 
-//+operator
+//+operator (obj)
 const Matrix Matrix::operator+(Matrix& right_obj) const {
 	if (columns == right_obj.columns && rows == right_obj.rows) {
 		Matrix obj_to_return (0, columns, rows);
@@ -283,7 +283,26 @@ const Matrix Matrix::operator+(Matrix& right_obj) const {
 	}
 }
 
-//-operator
+//+operator (num)
+const Matrix Matrix::operator+(double inc_num) const {
+	Matrix obj_to_return(0, columns, rows);
+	for (int i = 0; i < columns; i++) {
+		for (int j = 0; j < rows; j++) {
+			obj_to_return.data[i][j] = data[i][j] + inc_num;
+		}
+	}
+	return obj_to_return;
+}
+
+//+operator (string)
+const Matrix Matrix::operator+(const char* str) const {
+	Matrix obj_to_return;
+	Matrix str_obj(str);
+	obj_to_return = *this + str_obj;
+	return obj_to_return;
+}
+
+//-operator (obj)
 const Matrix Matrix::operator-(Matrix& right_obj) const {
 	if (columns == right_obj.columns && rows == right_obj.rows) {
 		Matrix obj_to_return (0, columns, rows);
@@ -323,6 +342,25 @@ const Matrix Matrix::operator-(Matrix& right_obj) const {
 		}
 		return overflowobj;
 	}
+}
+
+//-operator (num)
+const Matrix Matrix::operator-(double decr_num) const {
+	Matrix obj_to_return(0, columns, rows);
+	for (int i = 0; i < columns; i++) {
+		for (int j = 0; j < rows; j++) {
+			obj_to_return.data[i][j] = data[i][j] - decr_num;
+		}
+	}
+	return obj_to_return;
+}
+
+//-operator (string)
+const Matrix Matrix::operator-(const char* str) const {
+	Matrix obj_to_return;
+	Matrix str_obj(str);
+	obj_to_return = *this - str_obj;
+	return obj_to_return;
 }
 
 //*operator (obj)
@@ -368,7 +406,7 @@ const Matrix Matrix::operator*(Matrix& right_obj) const {
 }
 
 //*operator (num)
-const Matrix Matrix::operator*(int mult_num) const {
+const Matrix Matrix::operator*(double mult_num) const {
 	Matrix obj_to_return(0, columns, rows);
 	for (int i = 0; i < columns; i++) {
 		for (int j = 0; j < rows; j++) {
@@ -378,13 +416,27 @@ const Matrix Matrix::operator*(int mult_num) const {
 	return obj_to_return;
 }
 
+//*operator (string)
+const Matrix Matrix::operator*(const char* str) const {
+	Matrix obj_to_return;
+	Matrix str_obj(str);
+	obj_to_return = *this * str_obj;
+	return obj_to_return;
+}
+
+
 //'/'operator (obj)
 const Matrix Matrix::operator/(Matrix& right_obj) const {
 	if (columns == right_obj.columns && rows == right_obj.rows) {
 		Matrix obj_to_return(0, columns, rows);
 		for (int i = 0; i < columns; i++) {
 			for (int j = 0; j < rows; j++) {
-				obj_to_return.data[i][j] = data[i][j] / right_obj.data[i][j];
+				if (right_obj.data[i][j] != 0) {
+					obj_to_return.data[i][j] = data[i][j] / right_obj.data[i][j];
+				}
+				else {
+					obj_to_return.data[i][j] = 0;
+				}
 			}
 		}
 		return obj_to_return;
@@ -426,7 +478,7 @@ const Matrix Matrix::operator/(Matrix& right_obj) const {
 }
 
 //'/'operator (num)
-const Matrix Matrix::operator/(int divisor_number) const {
+const Matrix Matrix::operator/(double divisor_number) const {
 	Matrix obj_to_return(0, columns, rows);
 	for (int i = 0; i < columns; i++) {
 		for (int j = 0; j < rows; j++) {
@@ -441,7 +493,15 @@ const Matrix Matrix::operator/(int divisor_number) const {
 	return obj_to_return;
 }
 
-//+=operator
+//'/'operator (string)
+const Matrix Matrix::operator/(const char* str) const {
+	Matrix obj_to_return;
+	Matrix str_obj(str);
+	obj_to_return = *this / str_obj;
+	return obj_to_return;
+}
+
+//+=operator (obj)
 Matrix& Matrix::operator+=(Matrix& right_obj) {
 	if (columns == right_obj.columns && rows == right_obj.rows) {
 		for (int i = 0; i < columns; i++) {
@@ -483,7 +543,18 @@ Matrix& Matrix::operator+=(Matrix& right_obj) {
 		return *this;
 	}
 }
-//-=operator
+
+//+=operator (num)
+Matrix& Matrix::operator+=(double inc_num) {
+	for (int i = 0; i < columns; i++) {
+		for (int j = 0; j < rows; j++) {
+			data[i][j] += inc_num;
+		}
+	}
+	return *this;
+}
+
+//-=operator (obj)
 Matrix& Matrix::operator-=(Matrix& right_obj) {
 	if (columns == right_obj.columns && rows == right_obj.rows) {
 		for (int i = 0; i < columns; i++) {
@@ -526,3 +597,234 @@ Matrix& Matrix::operator-=(Matrix& right_obj) {
 	}
 }
 
+//-=operator (num)
+Matrix& Matrix::operator-=(double decr_num) {
+	for (int i = 0; i < columns; i++) {
+		for (int j = 0; j < rows; j++) {
+			data[i][j] -= decr_num;
+		}
+	}
+	return *this;
+}
+
+//*=operator (obj)
+Matrix Matrix::operator*=(Matrix& right_obj) {
+	if (columns == right_obj.columns && rows == right_obj.rows) {
+		for (int i = 0; i < columns; i++) {
+			for (int j = 0; j < rows; j++) {
+				data[i][j] *= right_obj.data[i][j];
+			}
+		}
+		return *this;
+	}
+	else {
+		int overflow_columns;
+		int overflow_rows;
+		if (columns > right_obj.columns) {
+			overflow_columns = columns;
+		}
+		else {
+			overflow_columns = right_obj.columns;
+		}
+		if (rows > right_obj.rows) {
+			overflow_rows = rows;
+		}
+		else {
+			overflow_rows = right_obj.rows;
+		}
+
+		Matrix overflowobj(0, overflow_columns, overflow_rows);
+		for (int i = 0; i < columns; i++) {
+			for (int j = 0; j < rows; j++) {
+				overflowobj.data[i][j] += data[i][j];
+			}
+		}
+		for (int i = 0; i < right_obj.columns; i++) {
+			for (int j = 0; j < right_obj.rows; j++) {
+				overflowobj.data[i][j] *= right_obj.data[i][j];
+
+			}
+		}
+		*this = overflowobj;
+		return *this;
+	}
+}
+
+//*=operator (num)
+Matrix Matrix::operator*=(double mult_num) {
+	for (int i = 0; i < columns; i++) {
+		for (int j = 0; j < rows; j++) {
+			data[i][j] *= mult_num;
+		}
+	}
+	return *this;
+}
+
+//'/'=operator (obj)
+Matrix Matrix::operator/=(Matrix& right_obj) {
+	if (columns == right_obj.columns && rows == right_obj.rows) {
+		for (int i = 0; i < columns; i++) {
+			for (int j = 0; j < rows; j++) {
+				if (right_obj.data[i][j] != 0) {
+					data[i][j] /= right_obj.data[i][j];
+				}
+				else {
+					data[i][j] = 0;
+				}
+			}
+		}
+		return *this;
+	}
+	else {
+		int overflow_columns;
+		int overflow_rows;
+		if (columns > right_obj.columns) {
+			overflow_columns = columns;
+		}
+		else {
+			overflow_columns = right_obj.columns;
+		}
+		if (rows > right_obj.rows) {
+			overflow_rows = rows;
+		}
+		else {
+			overflow_rows = right_obj.rows;
+		}
+
+		Matrix overflowobj(0, overflow_columns, overflow_rows);
+		for (int i = 0; i < columns; i++) {
+			for (int j = 0; j < rows; j++) {
+				overflowobj.data[i][j] += data[i][j];
+			}
+		}
+		for (int i = 0; i < right_obj.columns; i++) {
+			for (int j = 0; j < right_obj.rows; j++) {
+				if (right_obj.data[i][j] != 0) {
+					overflowobj.data[i][j] /= right_obj.data[i][j];
+				}
+				else {
+					overflowobj.data[i][j] = 0;
+				}
+			}
+		}
+		*this = overflowobj;
+		return *this;
+	}
+}
+
+//'/'=operator (num)
+Matrix Matrix::operator/=(double divisor_number) {
+	for (int i = 0; i < columns; i++) {
+		for (int j = 0; j < rows; j++) {
+			if (divisor_number != 0) {
+				data[i][j] /= divisor_number;
+			}
+			else {
+				data[i][j] = 0;
+			}
+		}
+	}
+	return *this;
+}
+
+//>operator
+bool Matrix::operator>(const Matrix& right_obj) {
+	double summ_left{};
+	for (int i = 0; i < columns; i++) {
+		for (int j = 0; j < rows; j++) {
+			summ_left += data[i][j];
+		}
+	}
+	double summ_right{};
+	for (int i = 0; i < right_obj.columns; i++) {
+		for (int j = 0; j < right_obj.rows; j++) {
+			summ_right += right_obj.data[i][j];
+		}
+	}
+	return summ_left > summ_right;
+}
+
+//<operator
+bool Matrix::operator<(const Matrix& right_obj) {
+	double summ_left{};
+	for (int i = 0; i < columns; i++) {
+		for (int j = 0; j < rows; j++) {
+			summ_left += data[i][j];
+		}
+	}
+	double summ_right{};
+	for (int i = 0; i < right_obj.columns; i++) {
+		for (int j = 0; j < right_obj.rows; j++) {
+			summ_right += right_obj.data[i][j];
+		}
+	}
+	return summ_left < summ_right;
+}
+
+//>=operator
+bool Matrix::operator>=(const Matrix& right_obj) {
+	double summ_left{};
+	for (int i = 0; i < columns; i++) {
+		for (int j = 0; j < rows; j++) {
+			summ_left += data[i][j];
+		}
+	}
+	double summ_right{};
+	for (int i = 0; i < right_obj.columns; i++) {
+		for (int j = 0; j < right_obj.rows; j++) {
+			summ_right += right_obj.data[i][j];
+		}
+	}
+	return summ_left >= summ_right;
+}
+
+//<=operator
+bool Matrix::operator<=(const Matrix& right_obj) {
+	double summ_left{};
+	for (int i = 0; i < columns; i++) {
+		for (int j = 0; j < rows; j++) {
+			summ_left += data[i][j];
+		}
+	}
+	double summ_right{};
+	for (int i = 0; i < right_obj.columns; i++) {
+		for (int j = 0; j < right_obj.rows; j++) {
+			summ_right += right_obj.data[i][j];
+		}
+	}
+	return summ_left <= summ_right;
+}
+
+//==operator
+bool Matrix::operator==(const Matrix& right_obj) {
+	double summ_left{};
+	for (int i = 0; i < columns; i++) {
+		for (int j = 0; j < rows; j++) {
+			summ_left += data[i][j];
+		}
+	}
+	double summ_right{};
+	for (int i = 0; i < right_obj.columns; i++) {
+		for (int j = 0; j < right_obj.rows; j++) {
+			summ_right += right_obj.data[i][j];
+		}
+	}
+	return summ_left == summ_right;
+}
+
+//!=operator
+bool Matrix::operator!=(const Matrix& right_obj) {
+	double summ_left{};
+	for (int i = 0; i < columns; i++) {
+		for (int j = 0; j < rows; j++) {
+			summ_left += data[i][j];
+		}
+	}
+	double summ_right{};
+	for (int i = 0; i < right_obj.columns; i++) {
+		for (int j = 0; j < right_obj.rows; j++) {
+			summ_right += right_obj.data[i][j];
+		}
+	}
+	return summ_left != summ_right;
+}
