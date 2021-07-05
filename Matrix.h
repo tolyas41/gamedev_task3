@@ -3,16 +3,16 @@
 
 
 class Matrix {
-	int columns;
 	int rows;
+	int columns;
 	double** data;
 public:
 
 	Matrix();
-	Matrix(int num, int in_columns, int in_rows);
+	Matrix(int num, int in_rows, int in_columns);
 
 //2-dimensional array with numbers into a class object.
-	Matrix(const int* array, int in_columns, int in_rows);
+	Matrix(const int* array, int in_rows, int in_columns);
 
 //copy constructor
 	Matrix(const Matrix& source);
@@ -61,7 +61,7 @@ public:
 	const Matrix operator*(const char* str) const;
 
 //'/'operator (obj)
-	const Matrix operator/(Matrix& right_obj) const;
+	const Matrix operator/(Matrix right_obj) const;
 	
 //'/'operator (num)
 	const Matrix operator/(double divisor_number) const;
@@ -89,7 +89,7 @@ public:
 	Matrix operator*=(double mult_num);
 
 //'/'=operator (obj)
-	Matrix operator/=(Matrix& right_obj);
+	Matrix operator/=(Matrix right_obj);
 
 //'/'*=operator (num)
 	Matrix operator/=(double divisor_number);

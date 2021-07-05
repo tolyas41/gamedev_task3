@@ -177,28 +177,6 @@ int main() {
 
 	}
 
-//'/'operator with obj
-	{
-		std::cout << "\n\n/operator check (obj): \n";
-		Matrix div_obj;
-		Matrix a_obj(23, 3, 3);
-		Matrix b_obj(2, 4, 3);
-		Matrix c_obj(0, 1, 3);
-		div_obj = a_obj / b_obj / c_obj;
-
-		std::cout << "\na_obj : \n";
-		a_obj.print_array();
-
-		std::cout << "\nb_obj : \n";
-		b_obj.print_array();
-
-		std::cout << "\nc_obj : \n";
-		c_obj.print_array();
-
-		std::cout << "\ndiv_obj (a / b / c): \n";
-		div_obj.print_array();
-
-	}
 //'/'operator with num
 	{
 		std::cout << "\n\n/operator check (num): \n";
@@ -251,25 +229,6 @@ int main() {
 
 	}
 
-//*=operator with object
-	{
-		std::cout << "\n\n*=operator check (obj): \n";
-		Matrix a_obj(2, 3, 3);
-		Matrix b_obj(3, 3, 3);
-		Matrix c_obj(4, 4, 5);
-		a_obj *= b_obj;
-		b_obj *= c_obj;
-
-		std::cout << "\na_obj : \n";
-		a_obj.print_array();
-
-		std::cout << "\nb_obj : \n";
-		b_obj.print_array();
-
-		std::cout << "\nc_obj : \n";
-		c_obj.print_array();
-
-	}
 
 //*=operator with num const
 	{
@@ -282,25 +241,6 @@ int main() {
 
 	}
 
-//'/'=operator with object
-	{
-		std::cout << "\n\n/=operator check (obj): \n";
-		Matrix a_obj(2, 3, 3);
-		Matrix b_obj(3, 3, 3);
-		Matrix c_obj(4, 4, 5);
-		a_obj /= b_obj;
-		b_obj /= c_obj;
-
-		std::cout << "\na_obj : \n";
-		a_obj.print_array();
-
-		std::cout << "\nb_obj : \n";
-		b_obj.print_array();
-
-		std::cout << "\nc_obj : \n";
-		c_obj.print_array();
-
-	}
 
 //'/'=operator with num const
 	{
@@ -343,12 +283,12 @@ int main() {
 
 	}
 
-//'/'*operator (string)
+//'/'operator (string)
 	{
 		std::cout << "\n\n/operator (string): \n";
 		Matrix a_obj;
 		Matrix b_obj(3, 3, 3);
-		a_obj = b_obj / "[3,2; 4,5]";
+		a_obj = b_obj / "[3,2,4; 4,5,9; 2,5,4]";
 
 		std::cout << "\na_obj : \n";
 		a_obj.print_array();
@@ -373,29 +313,90 @@ int main() {
 	}
 
 //*operator with object
-{
-	std::cout << "\n\n*operator check (obj): \n";
-	Matrix mult_obj;
-	Matrix a_obj(2, 3, 2);
-	Matrix b_obj(3, 4, 3);
-	Matrix c_obj(4, 3, 3);
-	mult_obj = a_obj * b_obj;
+	{
+		std::cout << "\n\n*operator check (obj): \n";
+		Matrix mult_obj;
+		Matrix a_obj(3, 4, 3);
+		Matrix b_obj(3, 3, 6);
+		Matrix c_obj(4, 3, 3);
+		mult_obj = a_obj * b_obj;
 
-	std::cout << "\na_obj : \n";
-	a_obj.print_array();
+		std::cout << "\na_obj : \n";
+		a_obj.print_array();
 
-	std::cout << "\nb_obj : \n";
-	b_obj.print_array();
+		std::cout << "\nb_obj : \n";
+		b_obj.print_array();
 
-	std::cout << "\nc_obj : \n";
-	c_obj.print_array();
+		std::cout << "\nc_obj : \n";
+		c_obj.print_array();
 
-	std::cout << "\nmult_obj (a * b * c): \n";
-	mult_obj.print_array();
+		std::cout << "\nmult_obj (a * b * c): \n";
+		mult_obj.print_array();
 
-}
+	}
+
+//*=operator with object
+	{
+		std::cout << "\n\n*=operator check (obj): \n";
+		Matrix a_obj(3, 2, 3);
+
+		std::cout << "\na_obj : \n";
+		a_obj.print_array();
+
+		Matrix b_obj(3, 3, 5);
+		std::cout << "\nb_obj : \n";
+		b_obj.print_array();
+
+		a_obj *= b_obj;
+
+		std::cout << "\na_obj : \n";
+		a_obj.print_array();
+
+	}
+
+//'/'operator with obj
+	{
+		std::cout << "\n\n/operator check (obj): \n";
+		Matrix div_obj;
+		int spec_array[5][5] = { {4,2,3,5,5},{4,5,6,2,3},{7,2,9,2,3},{10,11,12,3,8},{4,5,9,5,4} };
+
+		Matrix b_obj(*spec_array, 5, 5);
+
+		std::cout << "\nb_obj : \n";
+		b_obj.print_array();
+
+		Matrix a_obj(5, 5, 5);
+		div_obj = a_obj / b_obj;
+
+		std::cout << "\na_obj : \n";
+		a_obj.print_array();
+
+		std::cout << "\nb_obj : \n";
+		b_obj.print_array();
+
+		std::cout << "\ndiv_obj (a / b): \n";
+		div_obj.print_array();
+
+	}
+
+//'/'=operator with object
+	{
+		std::cout << "\n\n/=operator check (obj): \n";
+		Matrix a_obj(22, 5, 5);
+		int spec_array[5][5] = { {4,2,3,5,5},{4,5,6,2,3},{7,2,9,2,3},{10,11,12,3,8},{4,5,9,5,4} };
+
+		Matrix b_obj(*spec_array, 5, 5);
+		a_obj /= b_obj;
+
+		std::cout << "\na_obj : \n";
+		a_obj.print_array();
+
+		std::cout << "\nb_obj : \n";
+		b_obj.print_array();
 
 
+	}
 
 	return 0;
 }
+
