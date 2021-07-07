@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-
+#include <cstddef>
 
 class Matrix {
 	int rows;
@@ -12,7 +12,7 @@ public:
 	Matrix(int num, int in_rows, int in_columns);
 
 //2-dimensional array with numbers into a class object.
-	Matrix(const int* array, int in_rows, int in_columns);
+	Matrix(const double* array, int in_rows, int in_columns);
 
 //copy constructor
 	Matrix(const Matrix& source);
@@ -22,6 +22,8 @@ public:
 
 //string to array conversion ctor
 	Matrix(const char* char_array);
+//nullptr ctor
+	Matrix(std::nullptr_t ptr);
 //destructor
 	~Matrix();
 
@@ -116,5 +118,7 @@ public:
 	void print_array();
 
 	std::string to_string(const Matrix& source);
+	double data_summ(const Matrix& obj);
+
 };
 
