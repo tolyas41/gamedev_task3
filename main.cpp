@@ -86,7 +86,7 @@ int main() {
 		std::cout << "\n\n-operator (obj) check : \n";
 		Matrix subtr_obj;
 		Matrix a_obj(55, 4, 4);
-		Matrix b_obj(11, 3, 3);
+		Matrix b_obj(11, 4, 4);
 		Matrix c_obj(4, 4, 4);
 		subtr_obj = a_obj - b_obj - c_obj;
 
@@ -143,15 +143,15 @@ int main() {
 //*operator with num const
 	{
 		std::cout << "\n\n*operator check (num): \n";
-		Matrix mult_num;
+		Matrix multiplicationValue;
 		Matrix a_obj(1, 3, 3);
-		mult_num = a_obj * 2 * 3;
+		multiplicationValue = a_obj * 2 * 3;
 
 		std::cout << "\na_obj : \n";
 		a_obj.print_array();
 
-		std::cout << "\nmult_num (a * 2 * 3): \n";
-		mult_num.print_array();
+		std::cout << "\nmultiplicationValue (a * 2 * 3): \n";
+		multiplicationValue.print_array();
 
 	}
 
@@ -175,7 +175,7 @@ int main() {
 		std::cout << "\n\n+=operator check : \n";
 		Matrix a_obj(55, 3, 3);
 		Matrix b_obj(12, 3, 3);
-		Matrix c_obj(4, 3, 3);
+		Matrix c_obj(4, 2, 2);
 		a_obj += b_obj += c_obj += c_obj;
 
 		std::cout << "\na_obj : \n";
@@ -192,8 +192,8 @@ int main() {
 	{
 		std::cout << "\n\n-=operator check : \n";
 		Matrix a_obj(55, 3, 3);
-		Matrix b_obj(12, 4, 3);
-		Matrix c_obj(4, 3, 4);
+		Matrix b_obj(12, 3, 3);
+		Matrix c_obj(4, 3, 3);
 		a_obj -= b_obj -= c_obj;
 
 		std::cout << "\na_obj : \n";
@@ -237,7 +237,7 @@ int main() {
 		std::cout << "\n\n*operator (string): \n";
 		Matrix a_obj;
 		Matrix b_obj(3, 3, 3);
-		a_obj = b_obj * "[123,123; 33,33]";
+		a_obj = b_obj * "5";
 
 		std::cout << "\na_obj : \n";
 		a_obj.print_array();
@@ -252,7 +252,7 @@ int main() {
 		std::cout << "\n\n/operator (string): \n";
 		Matrix a_obj;
 		Matrix b_obj(3, 3, 3);
-		a_obj = b_obj / "[3,2,4; 4,5,9; 2,5,4]";
+		a_obj = b_obj / "12";
 
 		std::cout << "\na_obj : \n";
 		a_obj.print_array();
@@ -266,9 +266,9 @@ int main() {
 	{
 		std::cout << "\n\n*operator check (obj): \n";
 		Matrix mult_obj;
-		Matrix a_obj(3, 3, 3);
-		Matrix b_obj(3, 3, 3);
-		Matrix c_obj(4, 3, 3);
+		Matrix a_obj(3, 4, 4);
+		Matrix b_obj(3, 4, 4);
+		Matrix c_obj(4, 4, 4);
 		mult_obj = a_obj * b_obj;
 
 		std::cout << "\na_obj : \n";
@@ -376,7 +376,7 @@ int main() {
 
 	//>operator
 	{
-		std::cout << "\n\n>operator (string): \n";
+		std::cout << "\n\n>operator : \n";
 		Matrix a_obj(8, 3, 3);
 		Matrix b_obj(6, 3, 3);
 

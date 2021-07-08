@@ -4,15 +4,18 @@
 #include <iomanip>
 #include <float.h>
 
-int to_int(const char* str);
-void overflow_check_double(double dbl_check);
-
 Matrix::Matrix()
 	: columns(0), rows(0), data(nullptr) {
 }
 
 //2. Contain a type conversion constructor that converts the 
 //directly specified numerical constant with a sign into a class object.
+
+Matrix::Matrix(std::nullptr_t ptr) {
+	rows = 0;
+	columns = 0;
+	data = ptr;
+}
 
 Matrix::Matrix(int num, int in_rows, int in_columns)
 	: rows(in_rows), columns(in_columns) {
@@ -32,7 +35,7 @@ Matrix::Matrix(int num, int in_rows, int in_columns)
 
 Matrix::Matrix(const double* array, int in_rows, int in_columns)
 	: rows(in_rows), columns(in_columns) {
-		data = new double* [rows];		  
+		data = new double* [rows];
 		for (int i = 0; i < rows; i++) {
 			data[i] = new double[columns];
 		}
@@ -41,13 +44,6 @@ Matrix::Matrix(const double* array, int in_rows, int in_columns)
 				data[i][j] = array[i * columns + j];
 			}	
 		}
-}
-
-//nullptr ctor
-Matrix::Matrix(std::nullptr_t ptr) {
-	rows = 0;
-	columns = 0;
-	data = ptr;
 }
 
 //destructor
@@ -84,38 +80,38 @@ Matrix::Matrix(Matrix&& source)
 //string to array conversion ctor
 Matrix::Matrix(const char* char_array) {
 
-	int str_numbers_length = 0;
-	bool valid_str_numbers = true;
+	int str_length = 0;
+	bool isValid = true;
 
-	while (char_array[str_numbers_length] != '\0') {
-		str_numbers_length++;
+	while (char_array[str_length] != '\0') {
+		str_length++;
 	}
-	if (char_array[0] != '[' || char_array[str_numbers_length - 1] != ']') {
-		valid_str_numbers = false;
+	if (char_array[0] != '[' || char_array[str_length - 1] != ']') {
+		isValid = false;
 	}
-	if (valid_str_numbers) {
+	if (isValid) {
 		int str_cols = 1;
-		for (int i = 1; i < str_numbers_length - 1; i++) {
+		for (int i = 1; i < str_length - 1; i++) {
 			if (char_array[i] == ';') {
 					str_cols++;
 					if (char_array[i + 1] != ' ' && (char_array[i + 1] < '0' || char_array[i + 1] > '9')) {
-						valid_str_numbers = false;
+						isValid = false;
 					}
 				}
 			}
 		int str_columns = 1;
 		int prev_str_columns = 1;
 		bool first_semicolon_pass = false;
-		for (int i = 1; i <= str_numbers_length - 1; i++) {
+		for (int i = 1; i <= str_length - 1; i++) {
 			if (char_array[i] == ',') {
 				str_columns++;
 				if (char_array[i + 1] < '0' || char_array[i + 1] > '9') {
-					valid_str_numbers = false;
+					isValid = false;
 				}
 			}
 			if ((char_array[i] == ';' || char_array[i] == ']') && first_semicolon_pass) {
 				if (prev_str_columns != str_columns) {
-					valid_str_numbers = false;
+					isValid = false;
 				}
 			}
 			if (char_array[i] == ';') {
@@ -125,9 +121,9 @@ Matrix::Matrix(const char* char_array) {
 			}
 		}
 
-		if (valid_str_numbers) {
+		if (isValid) {
 			std::vector < std::vector<int> > temp_vec(str_cols, std::vector<int>(str_columns, 0));
-			for (int i = 0, j = 0, k = 1; k < str_numbers_length - 1 && valid_str_numbers; k++) {
+			for (int i = 0, j = 0, k = 1; k < str_length - 1 && isValid; k++) {
 				switch (char_array[k]) {
 				case '0':
 				case '1':
@@ -151,11 +147,11 @@ Matrix::Matrix(const char* char_array) {
 				case ' ':
 					break;
 				default:
-					valid_str_numbers = false;
+					isValid = false;
 					break;
 				}
 			}
-			if (valid_str_numbers) {
+			if (isValid) {
 				rows = str_cols;
 				columns = str_columns;
 				data = new double* [rows];
@@ -171,7 +167,7 @@ Matrix::Matrix(const char* char_array) {
 			}
 		}
 	}
-	if (valid_str_numbers == false) {
+	if (isValid == false) {
 		rows = 0;
 		columns = 0;
 		data = nullptr;
@@ -254,190 +250,174 @@ std::string Matrix::to_string(const Matrix& source) {
 //+operator (obj)
 const Matrix Matrix::operator+(Matrix& right_obj) const {
 	if (rows == right_obj.rows && columns == right_obj.columns) {
-		Matrix obj_to_return (0, rows, columns);
+		Matrix result (0, rows, columns);
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < columns; j++) {
-				obj_to_return.data[i][j] = data[i][j] + right_obj.data[i][j];
-				overflow_check_double(obj_to_return.data[i][j]);
+				result.data[i][j] = checkOverflow(data[i][j], right_obj.data[i][j], "add");
 			}
 		}
-		return obj_to_return;
+		return result;
 	}
 	else {
 		std::cout << "\nmatrices are not consistent!\n";
-		Matrix null_obj(nullptr);
-		return null_obj;
+		return nullptr;
 	}
 }
 
 //+operator (num)
-const Matrix Matrix::operator+(double inc_num) const {
-	Matrix obj_to_return(0, rows, columns);
+const Matrix Matrix::operator+(int additionValue) const {
+	Matrix result(0, rows, columns);
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
-			obj_to_return.data[i][j] = data[i][j] + inc_num;
-			overflow_check_double(obj_to_return.data[i][j]);
+			result.data[i][j] = checkOverflow(data[i][j], additionValue, "add");
 		}
 	}
-	return obj_to_return;
+	return result;
 }
 
 //+operator (string)
 const Matrix Matrix::operator+(const char* str) const {
-	Matrix obj_to_return;
-	obj_to_return = *this + to_int(str);
-	return obj_to_return;
+	return *this + std::stoi(str);
 }
 
 //-operator (obj)
 const Matrix Matrix::operator-(Matrix& right_obj) const {
 	if (rows == right_obj.rows && columns == right_obj.columns) {
-		Matrix obj_to_return (0, rows, columns);
+		Matrix result (0, rows, columns);
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < columns; j++) {
-				obj_to_return.data[i][j] = data[i][j] - right_obj.data[i][j];
-				overflow_check_double(obj_to_return.data[i][j]);
+				result.data[i][j] = checkOverflow(data[i][j], right_obj.data[i][j], "sub");
 			}
 		}
-		return obj_to_return;
+		return result;
 	}
 	else {
 		std::cout << "\nmatrices are not consistent!\n";
-		Matrix null_obj(nullptr);
-		return null_obj;
+		return nullptr;
 	}
 }
 
 //-operator (num)
-const Matrix Matrix::operator-(double decr_num) const {
-	Matrix obj_to_return(0, rows, columns);
+const Matrix Matrix::operator-(int subtractionValue) const {
+	Matrix result(0, rows, columns);
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
-			obj_to_return.data[i][j] = data[i][j] - decr_num;
-			overflow_check_double(obj_to_return.data[i][j]);
+			result.data[i][j] = checkOverflow(data[i][j], subtractionValue, "sub");
 		}
 	}
-	return obj_to_return;
+	return result;
 }
 
 //-operator (string)
 const Matrix Matrix::operator-(const char* str) const {
-	Matrix obj_to_return;
-	obj_to_return = *this - to_int(str);
-	return obj_to_return;
+	return *this - std::stoi(str);
 }
 
 //*operator (obj)
 const Matrix Matrix::operator*(Matrix& right_obj) const {
 	if (columns == right_obj.rows) {
-		Matrix obj_to_return(0, rows, right_obj.columns);
+		Matrix result(0, rows, right_obj.columns);
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < right_obj.columns; j++) {
 				for (int m = 0; m < right_obj.rows; m++) {
-					obj_to_return.data[i][j] += data[i][m] * right_obj.data[m][j];
+					result.data[i][j] += data[i][m] * right_obj.data[m][j];
 				}
 			}
 		}
-		return obj_to_return;
+		return result;
 	}
 	else {
 		std::cout << "\nmatrices are not consistent!\n";
-		Matrix null_obj(nullptr);
-		return null_obj;
+		return nullptr;
 	}
 }
 
 //*operator (num)
-const Matrix Matrix::operator*(double mult_num) const {
-	Matrix obj_to_return(0, rows, columns);
+const Matrix Matrix::operator*(int multiplicationValue) const {
+	Matrix result(0, rows, columns);
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
-			obj_to_return.data[i][j] = data[i][j] * mult_num;
+			result.data[i][j] = data[i][j] * multiplicationValue;
 		}
 	}
-	return obj_to_return;
+	return result;
 }
 
 //*operator (string)
 const Matrix Matrix::operator*(const char* str) const {
-	Matrix obj_to_return;
-	obj_to_return = *this * to_int(str);
-	return obj_to_return;
+	return *this * std::stoi(str);
 }
 
 //'/'operator (obj)
 const Matrix Matrix::operator/(Matrix right_obj) const {
 	if (right_obj.columns == right_obj.rows) {
-		Matrix tempor = right_obj;
 		Matrix inverse_matrix(0, right_obj.columns, right_obj.columns);
 		for (int i = 0; i < right_obj.columns; i++) {
 			inverse_matrix.data[i][i] = 1;
 		}
+		//straight
 		for (int i = 0; i < right_obj.rows; i++) {
-			double temp = right_obj.data[i][i];
+			double diagonal = right_obj.data[i][i];
 			for (int j = 0; j < right_obj.columns; j++) {
-				right_obj.data[i][j] /= temp;
-				inverse_matrix.data[i][j] /= temp;
+				right_obj.data[i][j] /= diagonal;
+				inverse_matrix.data[i][j] /= diagonal;
 			}
-			for (int ii = i + 1; ii < right_obj.columns; ii++) {
-				double temp2 = right_obj.data[ii][i];
-				for (int jj = 0; jj < right_obj.columns; jj++) {
-					right_obj.data[ii][jj] -= (right_obj.data[i][jj] * temp2);
-					inverse_matrix.data[ii][jj] -= (inverse_matrix.data[i][jj] * temp2);
+			for (int k = i + 1; k < right_obj.columns; k++) {
+				double element_below_diagonal = right_obj.data[k][i];
+				for (int m = 0; m < right_obj.columns; m++) {
+					right_obj.data[k][m] -= (right_obj.data[i][m] * element_below_diagonal);
+					inverse_matrix.data[k][m] -= (inverse_matrix.data[i][m] * element_below_diagonal);
 				}
 			}
 		}
+		//reverse
 		for (int i = right_obj.rows - 1; i > 0; i--) {
-			for (int ii = i - 1; ii >= 0; ii--) {
-				double temp2 = right_obj.data[ii][i];
-				for (int jj = right_obj.columns - 1; jj >= 0; jj--) {
-					right_obj.data[ii][jj] -= (right_obj.data[i][jj] * temp2);
-					inverse_matrix.data[ii][jj] -= (inverse_matrix.data[i][jj] * temp2);
+			for (int k = i - 1; k >= 0; k--) {
+				double element_above_diagonal = right_obj.data[k][i];
+				for (int m = right_obj.columns - 1; m >= 0; m--) {
+					right_obj.data[k][m] -= (right_obj.data[i][m] * element_above_diagonal);
+					inverse_matrix.data[k][m] -= (inverse_matrix.data[i][m] * element_above_diagonal);
 				}
 			}
 		}
-		Matrix result = *this * inverse_matrix;
-		return result;
+		return *this * inverse_matrix;
 	}
 	else {
 		std::cout << "divisor matrix is not square!";
-		Matrix null_obj(nullptr);
-		return null_obj;
+		return nullptr;
 	}
 }
 
 //'/'operator (num)
-const Matrix Matrix::operator/(double divisor_number) const {
-	Matrix obj_to_return(0, rows, columns);
+const Matrix Matrix::operator/(int divisionValue) const {
+	Matrix result(0, rows, columns);
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
-			if (divisor_number != 0) {
-				obj_to_return.data[i][j] = data[i][j] / divisor_number;
+			if (divisionValue != 0) {
+				result.data[i][j] = data[i][j] / divisionValue;
 			}
 			else {
-				obj_to_return.data[i][j] = 0;
+				result.data[i][j] = 0;
 			}
 		}
 	}
-	return obj_to_return;
+	return result;
 }
 
 //'/'operator (string)
 const Matrix Matrix::operator/(const char* str) const {
-	Matrix obj_to_return;
-	obj_to_return = *this / to_int(str);
-	return obj_to_return;
+	return *this / std::stoi(str);
 }
 
 //+=operator (obj)
 Matrix& Matrix::operator+=(Matrix& right_obj) {
-		*this = *this + right_obj;
-		return *this;
+	*this = *this + right_obj;
+	return *this;
 }
 
 //+=operator (num)
-Matrix& Matrix::operator+=(double inc_num) {
-	*this = *this + inc_num;
+Matrix& Matrix::operator+=(int additionValue) {
+	*this = *this + additionValue;
 	return *this;
 }
 
@@ -448,8 +428,8 @@ Matrix& Matrix::operator-=(Matrix& right_obj) {
 }
 
 //-=operator (num)
-Matrix& Matrix::operator-=(double decr_num) {
-	*this = *this - decr_num;
+Matrix& Matrix::operator-=(int subtractionValue) {
+	*this = *this - subtractionValue;
 	return *this;
 }
 
@@ -460,8 +440,8 @@ Matrix Matrix::operator*=(Matrix& right_obj) {
 }
 
 //*=operator (num)
-Matrix Matrix::operator*=(double mult_num) {
-	*this = *this * mult_num;
+Matrix Matrix::operator*=(int multiplicationValue) {
+	*this = *this * multiplicationValue;
 	return *this;
 }
 
@@ -472,86 +452,65 @@ Matrix Matrix::operator/=(Matrix right_obj) {
 }
 
 //'/'=operator (num)
-Matrix Matrix::operator/=(double divisor_number) {
-	*this = *this / divisor_number;
+Matrix Matrix::operator/=(int divisionValue) {
+	*this = *this / divisionValue;
 	return *this;
 }
 
 //>operator
 bool Matrix::operator>(const Matrix& right_obj) {
-	return data_summ(*this) > data_summ(right_obj);
+	return dataSumm(*this) > dataSumm(right_obj);
 }
 
 //<operator
 bool Matrix::operator<(const Matrix& right_obj) {
-	return data_summ(*this) < data_summ(right_obj);
+	return dataSumm(*this) < dataSumm(right_obj);
 }
 
 //>=operator
 bool Matrix::operator>=(const Matrix& right_obj) {
-	return data_summ(*this) >= data_summ(right_obj);
+	return dataSumm(*this) >= dataSumm(right_obj);
 }
 
 //<=operator
 bool Matrix::operator<=(const Matrix& right_obj) {
-	return data_summ(*this) <= data_summ(right_obj);
+	return dataSumm(*this) <= dataSumm(right_obj);
 }
 
 //==operator
 bool Matrix::operator==(const Matrix& right_obj) {
-	return data_summ(*this) == data_summ(right_obj);
+	return dataSumm(*this) == dataSumm(right_obj);
 }
 
 //!=operator
 bool Matrix::operator!=(const Matrix& right_obj) {
-	return data_summ(*this) != data_summ(right_obj);
+	return dataSumm(*this) != dataSumm(right_obj);
 }
 
-
-int to_int(const char* str) {
-	int str_numbers_length{};
-	bool valid_str_numbers = true;
-	int integer_str{};
-
-	while (str[str_numbers_length] != '\0') {
-		str_numbers_length++;
-	}
-	for (int k = 0; k < str_numbers_length && valid_str_numbers; k++) {
-		switch (str[k]) {
-		case '0':
-		case '1':
-		case '2':
-		case '3':
-		case '4':
-		case '5':
-		case '6':
-		case '7':
-		case '8':
-		case '9':
-			integer_str = integer_str * 10 + str[k] - '0';
-			break;
-		default:
-			valid_str_numbers = false;
-			break;
+int Matrix::checkOverflow(int valueLeft, int valueRight, const std::string& operation) const {
+	if (operation == "add") {
+		if ((valueLeft + valueRight) > INT_MAX) {
+			return 0;
+		}
+		else {
+			return valueLeft + valueRight;
 		}
 	}
-	if (valid_str_numbers) {
-		return integer_str;
+	else if (operation == "sub") {
+		if ((valueLeft - valueRight) < INT_MIN) {
+			return 0;
+		}
+		else {
+			return valueLeft - valueRight;
+		}
 	}
-	if (valid_str_numbers == false) {
-		std::cout << "\n==INVALID STRING==\n";
-		integer_str = 0;
-		return integer_str;
-	}
-}
-
-void overflow_check_double(double dbl_check) {
-	if (dbl_check > DBL_MAX || dbl_check < -DBL_MAX) {
-		std::cout << "\ndouble variable overflow!\n";
+	else {
+		std::cout << "\nwrong operation type (use add, or sub)\n";
+		return 0;
 	}
 }
 
-double Matrix::data_summ(const Matrix& obj) {
+double Matrix::dataSumm(const Matrix& obj) {
 	double summ{};
 	for (int i = 0; i < obj.rows; i++) {
 		for (int j = 0; j < obj.columns; j++) {

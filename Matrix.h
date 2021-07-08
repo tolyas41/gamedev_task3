@@ -22,7 +22,7 @@ public:
 
 //string to array conversion ctor
 	Matrix(const char* char_array);
-//nullptr ctor
+
 	Matrix(std::nullptr_t ptr);
 //destructor
 	~Matrix();
@@ -39,7 +39,7 @@ public:
 	const Matrix operator+(Matrix& right_obj) const;
 
 //+operator (num)
-	const Matrix operator+(double inc_num) const;
+	const Matrix operator+(int additionValue) const;
 
 //+operator (string)
 	const Matrix operator+(const char* str) const;
@@ -48,7 +48,7 @@ public:
 	const Matrix operator-(Matrix& right_obj) const;
 
 //-operator (num)
-	const Matrix operator-(double decr_num) const;
+	const Matrix operator-(int subtractionValue) const;
 
 //-operator (string)
 	const Matrix operator-(const char* str) const;
@@ -57,7 +57,7 @@ public:
 	const Matrix operator*(Matrix& right_obj) const;
 
 //*operator (num)
-	const Matrix operator*(double mult_num) const;
+	const Matrix operator*(int multiplicationValue) const;
 
 //*operator (string)
 	const Matrix operator*(const char* str) const;
@@ -66,7 +66,7 @@ public:
 	const Matrix operator/(Matrix right_obj) const;
 	
 //'/'operator (num)
-	const Matrix operator/(double divisor_number) const;
+	const Matrix operator/(int divisionValue) const;
 
 //'/'operator (string)
 	const Matrix operator/(const char* str) const;
@@ -76,25 +76,25 @@ public:
 	Matrix& operator+=(Matrix& right_obj);
 
 //+=operator (num)
-	Matrix& operator+=(double inc_num);
+	Matrix& operator+=(int additionValue);
 
 //-=operator (obj)
 	Matrix& operator-=(Matrix& right_obj);
 
 //-=operator (num)
-	Matrix& operator-=(double decr_num);
+	Matrix& operator-=(int subtractionValue);
 
 //*=operator (obj)
 	Matrix operator*=(Matrix& right_obj);
 
 //*=operator (num)
-	Matrix operator*=(double mult_num);
+	Matrix operator*=(int multiplicationValue);
 
 //'/'=operator (obj)
 	Matrix operator/=(Matrix right_obj);
 
 //'/'*=operator (num)
-	Matrix operator/=(double divisor_number);
+	Matrix operator/=(int divisionValue);
 
 
 //>operator
@@ -118,7 +118,8 @@ public:
 	void print_array();
 
 	std::string to_string(const Matrix& source);
-	double data_summ(const Matrix& obj);
+	double dataSumm(const Matrix& obj);
+	int checkOverflow(int valueLeft, int valueRight, const std::string& operation) const;
 
 };
 
