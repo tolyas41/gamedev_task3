@@ -119,7 +119,8 @@ public:
 
 	std::string to_string(const Matrix& source);
 	double dataSumm(const Matrix& obj);
-	int checkOverflow(int valueLeft, int valueRight, const std::string& operation) const;
+	int checkOverflowAddition(int valueLeft, int valueRight) const;
+	int checkOverflowSubtraction(int valueLeft, int valueRight) const;
 
 };
 

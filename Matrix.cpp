@@ -253,7 +253,7 @@ const Matrix Matrix::operator+(Matrix& right_obj) const {
 		Matrix result (0, rows, columns);
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < columns; j++) {
-				result.data[i][j] = checkOverflow(data[i][j], right_obj.data[i][j], "add");
+				result.data[i][j] = checkOverflowAddition(data[i][j], right_obj.data[i][j]);
 			}
 		}
 		return result;
@@ -269,7 +269,7 @@ const Matrix Matrix::operator+(int additionValue) const {
 	Matrix result(0, rows, columns);
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
-			result.data[i][j] = checkOverflow(data[i][j], additionValue, "add");
+			result.data[i][j] = checkOverflowAddition(data[i][j], additionValue);
 		}
 	}
 	return result;
@@ -286,7 +286,7 @@ const Matrix Matrix::operator-(Matrix& right_obj) const {
 		Matrix result (0, rows, columns);
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < columns; j++) {
-				result.data[i][j] = checkOverflow(data[i][j], right_obj.data[i][j], "sub");
+				result.data[i][j] = checkOverflowSubtraction(data[i][j], right_obj.data[i][j]);
 			}
 		}
 		return result;
@@ -302,7 +302,7 @@ const Matrix Matrix::operator-(int subtractionValue) const {
 	Matrix result(0, rows, columns);
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
-			result.data[i][j] = checkOverflow(data[i][j], subtractionValue, "sub");
+			result.data[i][j] = checkOverflowSubtraction(data[i][j], subtractionValue);
 		}
 	}
 	return result;
@@ -487,26 +487,25 @@ bool Matrix::operator!=(const Matrix& right_obj) {
 	return dataSumm(*this) != dataSumm(right_obj);
 }
 
-int Matrix::checkOverflow(int valueLeft, int valueRight, const std::string& operation) const {
-	if (operation == "add") {
-		if ((valueLeft + valueRight) > INT_MAX) {
-			return 0;
-		}
-		else {
-			return valueLeft + valueRight;
-		}
-	}
-	else if (operation == "sub") {
-		if ((valueLeft - valueRight) < INT_MIN) {
-			return 0;
-		}
-		else {
-			return valueLeft - valueRight;
-		}
+int Matrix::checkOverflowAddition(int valueLeft, int valueRight) const {
+	if ((valueRight >= 0 && valueLeft > INT_MAX - valueRight) ||
+		(valueRight <= 0 && valueLeft < INT_MIN - valueRight)) {
+		std::cout << "\nint variable overflow!\n";
+		return 0;
 	}
 	else {
-		std::cout << "\nwrong operation type (use add, or sub)\n";
+		return valueLeft + valueRight;
+	}
+}
+
+int Matrix::checkOverflowSubtraction(int valueLeft, int valueRight) const {
+	if ((valueRight <= 0 && valueLeft > INT_MAX + valueRight) ||
+		(valueRight >= 0 && valueLeft < INT_MIN + valueRight)) {
+		std::cout << "\nint variable overflow!\n";
 		return 0;
+	}
+	else {
+		return valueLeft - valueRight;
 	}
 }
 
